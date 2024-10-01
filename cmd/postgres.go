@@ -1,12 +1,13 @@
+//go:build all || db || postgres
+
 package cmd
 
 import (
 	"database/sql"
 	"fmt"
-	"strings"
 	"time"
 
-	// Provides mysql SQL functionality
+	// Provides postgres SQL functionality
 	_ "github.com/lib/pq"
 	"github.com/spf13/cobra"
 	"github.com/violenttestpen/gura/pkg/helper"
@@ -41,14 +42,16 @@ var postgresCmd = &cobra.Command{
 		db.SetMaxOpenConns(10)
 		db.SetMaxIdleConns(10)
 
-		query := strings.Join(cmd.Flags().Args(), " ")
+		queries := cmd.Flags().Args()
 
-		if verbose {
-			fmt.Println("SQL Query:", query)
-		}
+		for _, query := range queries {
+			if verbose {
+				fmt.Println("SQL Query:", query)
+			}
 
-		if err := helper.PerformDBQuery(db, query); err != nil {
-			panic(err)
+			if err := helper.PerformDBQuery(db, query); err != nil {
+				panic(err)
+			}
 		}
 	},
 }

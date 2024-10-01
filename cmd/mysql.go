@@ -1,9 +1,10 @@
+//go:build all || db || mysql
+
 package cmd
 
 import (
 	"database/sql"
 	"fmt"
-	"strings"
 	"time"
 
 	// Provides mysql SQL functionality
@@ -42,14 +43,16 @@ var mysqlCmd = &cobra.Command{
 		db.SetMaxOpenConns(10)
 		db.SetMaxIdleConns(10)
 
-		query := strings.Join(cmd.Flags().Args(), " ")
+		queries := cmd.Flags().Args()
 
-		if verbose {
-			fmt.Println("SQL Query:", query)
-		}
+		for _, query := range queries {
+			if verbose {
+				fmt.Println("SQL Query:", query)
+			}
 
-		if err := helper.PerformDBQuery(db, query); err != nil {
-			panic(err)
+			if err := helper.PerformDBQuery(db, query); err != nil {
+				panic(err)
+			}
 		}
 	},
 }
