@@ -1,4 +1,4 @@
-//go:build all || ssh
+//go:build all || remote || ssh
 
 package cmd
 
@@ -16,9 +16,8 @@ import (
 )
 
 var sshVars = struct {
-	Host   string
-	Port   uint
-	DBName string
+	Host string
+	Port uint
 
 	Username             string
 	Password             string
